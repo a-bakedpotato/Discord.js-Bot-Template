@@ -6,8 +6,11 @@ module.exports = {
 	name: 'help',
 	description: 'Displays a list of the commands.',
 	run: async msg => {
+		let pageSize = 6; // Must be below 25, I'd recommend 6, 9, or 12
+		
 		let commands = fs.readdirSync('./commands');
-		if (commands.length <= 9) return msg.channel.send({
+		if (pageSize > 25) pageSize = 25;
+		if (commands.length <= (pageSize + 3 - (pageSize % 3) - (pageSize % 25))) return msg.channel.send({
 			embed: {
 				title: 'Help for '+msg.client.user.username,
 				color: 0x5555FF,
@@ -28,11 +31,11 @@ module.exports = {
 		let pages = [];
 		let page = 0;
 
-		for (let i = 0; i <= commands.length; i += 6){
+		for (let i = 0; i <= commands.length; i += pageSize){
 			pages.push({
 				title: 'Help for '+msg.client.user.username,
 				color: 0x5555FF,
-				fields: commands.slice(i, i+6).map(c => {
+				fields: commands.slice(i, i+pageSize).map(c => {
 					let cmd = require('./'+c);
 					return {
 						name: process.env.prefix+cmd.name,
@@ -55,7 +58,7 @@ module.exports = {
 		let rCollect = bMsg.createReactionCollector((r, u) => emojis.includes(r.emoji.name) && u.id === msg.author.id, { time: 600000 });
 		emojis.forEach(e => bMsg.react(e));
 
-		bMsg.on('collect', r => {
+		rCollect.on('collect', r => {
 			if (msg.channel.type === 'text') bMsg.reactions.resolve(r.emoji.name).users.remove(msg.author.id);
 			switch (r.emoji.name){
 				case '⏮':
