@@ -15,14 +15,14 @@ client.on('ready', async () => {
 		let cmd = require('./commands/'+command);
 		commands[cmd.name] = cmd;
 		console.log('Registered command: '+cmd.name);
-		if (command.aliases){
-			for (const alias of command.aliases){
+		if (cmd.aliases){
+			for (const alias of cmd.aliases){
 				commands[alias] = cmd;
 				console.log('Registered command alias: '+alias);
 			}
 		}
 
-		if (command.runSlash && !cmds.includes(cmd.name)){
+		if (cmd.runSlash && !cmds.includes(cmd.name)){
 			cmds.push(cmd.name);
 			let slashCommand = await axios.post('https://discord.com/api/v8/applications/'+client.user.id+'/commands',
 				{
