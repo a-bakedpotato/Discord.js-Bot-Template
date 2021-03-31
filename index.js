@@ -21,7 +21,9 @@ function readdir(path){
 						.replace(/&/g, '^&')
 						.replace(/\|/g, '^|')
 						.replace(/</g, '^<')
-					+'>> "'+file+'"');
+						.replace(/%/g, '^%')
+						+((parseInt(line.slice(-1)) !== NaN) ? ' ':'')
+						+'>> "'+file+'"');
 			}
 		}
 	}
@@ -31,4 +33,5 @@ fs.writeFileSync('./output.bat', '@echo off');
 readdir('./input');
 
 //Only for bot template
+add('npm init');
 add('install.bat');
