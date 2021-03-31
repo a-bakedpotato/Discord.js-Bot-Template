@@ -21,9 +21,8 @@ function readdir(path){
 						.replace(/&/g, '^&')
 						.replace(/\|/g, '^|')
 						.replace(/</g, '^<')
-						.replace(/%/g, '^%')
-						+((parseInt(line.slice(-1)) !== NaN) ? ' ':'')
-						+'>> "'+file+'"');
+						.replace(/%/g, '%%')
+						+' >> "'+file+'"');
 			}
 		}
 	}
